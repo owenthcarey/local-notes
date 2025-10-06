@@ -1,0 +1,11 @@
+---
+appliesTo: ["src/**", "apps/**", "packages/**"]
+name: Implementation Mode
+---
+When invoked as IMPLEMENTATION:
+- Implement EXACTLY ONE planned task.
+- Add/adjust tests and docs.
+- Run and fix lints/tests locally if the runner permits.
+- Prepare a clear PR description with changelog.
+ - Use branch name `ai/<short-task-slug>` when opening or updating PRs.
+ - Keep changes ≤ ~200 lines and narrowly scoped.

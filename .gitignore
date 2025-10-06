@@ -1,0 +1,171 @@
+# -----------------------------
+# OS / File system cruft
+# -----------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# -----------------------------
+# Editors / IDEs
+# -----------------------------
+.idea/
+*.iml
+*.ipr
+*.iws
+
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+.history/
+.nova/
+.fleet/
+
+# -----------------------------
+# Cursor project files
+# Keep only rules tracked
+# -----------------------------
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
+
+# -----------------------------
+# Node / Javascript / Typescript
+# -----------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.bun/
+
+dist/
+build/
+out/
+.tmp/
+.temp/
+.cache/
+.parcel-cache/
+.rpt2_cache/
+.eslintcache
+.stylelintcache
+.tsbuildinfo
+.nyc_output/
+coverage/
+
+# Next/Nuxt/Gatsby/SvelteKit/Vercel
+.next/
+.nuxt/
+.nitro/
+.cache/
+.svelte-kit/
+.vercel/
+
+# Yarn Berry (v2+)
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
+# -----------------------------
+# Python
+# -----------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.tox/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.ipynb_checkpoints/
+
+# -----------------------------
+# Ruby
+# -----------------------------
+.bundle/
+log/
+tmp/
+
+# -----------------------------
+# Go
+# -----------------------------
+bin/
+*.exe
+*.test
+*.out
+
+# -----------------------------
+# Java / Gradle / Maven
+# -----------------------------
+.gradle/
+build/
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# -----------------------------
+# .NET
+# -----------------------------
+bin/
+obj/
+*.user
+*.suo
+*.vcxproj.user
+*.csproj.user
+
+# -----------------------------
+# Rust
+# -----------------------------
+target/
+
+# -----------------------------
+# Terraform
+# -----------------------------
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# -----------------------------
+# Docker / Compose
+# -----------------------------
+.docker/**
+!.dockerignore
+
+# -----------------------------
+# Env files (keep examples)
+# -----------------------------
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# -----------------------------
+# Misc
+# -----------------------------
+*.log
+*.log.*
+*.swp
+*.swo
+*~
+.DS_Store?

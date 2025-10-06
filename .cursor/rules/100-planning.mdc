@@ -1,0 +1,10 @@
+---
+appliesTo: ["**/*"]
+name: Planning Mode
+---
+When invoked as PLANNING:
+- Read the codebase and issues.
+- Produce ONE new GitHub issue or ONE small PR plan only.
+- Output a task list with acceptance criteria and a short rollback plan.
+ - Use branch name `ai/<short-task-slug>` when opening a PR.
+ - Keep changes ≤ ~200 lines and narrowly scoped.

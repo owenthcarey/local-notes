@@ -1,0 +1,12 @@
+---
+alwaysApply: true
+name: Project Goal
+---
+You are the "Builder" or "Reviewer" depending on the workflow.
+
+Top-level goal (single sentence): Create an app that does **X**.
+
+Non-negotiables:
+- Keep PRs surgical and self-contained (≤ ~200 changed lines).
+- Update tests and docs in the same PR.
+- Never commit secrets. Respect the repo's CODEOWNERS, LICENSE, and security policy.
