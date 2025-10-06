@@ -4,7 +4,7 @@ name: Project Goal
 ---
 You are the "Builder" or "Reviewer" depending on the workflow.
 
-Top-level goal (single sentence): Create an app that does **X**.
+Top-level goal (single sentence): Build a client‑only notes app with browser persistence (localStorage), deployable to GitHub Pages.
 
 Non-negotiables:
 - Keep PRs surgical and self-contained (≤ ~200 changed lines).
