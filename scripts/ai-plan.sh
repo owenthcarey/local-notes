@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MODEL="gpt-5-high"             # Builder
+MODEL="gpt-5"                  # Builder
 read -r -d '' PROMPT <<'EOF' || true
 PLAN a single, minimal PR to advance the top-level goal.
 

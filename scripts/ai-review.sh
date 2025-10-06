@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MODEL="claude-4.5-sonnet"          # Claude 4.5 Sonnet
+MODEL="sonnet-4.5-thinking"        # Claude 4.5 Sonnet (thinking)
 PR_URL="$1"
 
 if [ -z "${PR_URL:-}" ]; then

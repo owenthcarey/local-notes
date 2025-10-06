@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MODEL="gpt-5-high"             # Builder
+MODEL="gpt-5"                  # Builder
 PR_URL="${1:-}"
 
 read -r -d '' PROMPT <<'EOF' || true
