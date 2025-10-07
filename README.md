@@ -1,6 +1,6 @@
-# AI PR Loop with Cursor CLI (Planning ↔ Implementation + Claude Reviews)
+# AI Single-Run with Cursor CLI (Plan → Implement + Claude Reviews)
 
-This repo boots a headless AI loop using the Cursor CLI to alternate between planning and implementation PRs, and uses a Claude 4.5 model for automated code reviews. The system can run on a schedule or be triggered manually.
+This repo runs a single end-to-end cycle when manually triggered: it creates a Planning PR, iterates with AI reviews until merged, then creates an Implementation PR, iterates with reviews until merged, and completes. There is no background loop or multi-PR batching.
 
 ## What you get
 - Planning and implementation guidance via `.cursor/rules/*` consumed by Cursor agent
@@ -23,31 +23,30 @@ scripts/
   ai-plan.sh
   ai-implement.sh
   ai-review.sh
+  ai-run.sh
 .github/
   workflows/
-    ai-loop.yml
-    ai-review.yml
+    ai-run.yml
 ```
 
 ## How it works
-- `ai-loop.yml` decides whether to run planning or implementation:
-  - `planning` when there are no open `ai/*` PRs
-  - `implementation` when there is at least one open `ai/*` PR
-- `ai-review.yml` triggers on PR updates. It runs a Claude 4.5 review via Cursor and, if no blockers are found, approves and auto-merges.
+- `ai-run.yml` (workflow-dispatch only) runs `scripts/ai-run.sh` once.
+- `scripts/ai-run.sh` orchestrates:
+  1. Create or update a Planning PR (`[PLAN]`, label `ai:planning`), then run `scripts/ai-review.sh` (Claude 4.5 Sonnet) and iterate: request changes → update PR via `scripts/ai-plan.sh`; approve → auto-merge.
+  2. Create or update an Implementation PR (`[IMPL]`, label `ai:implementation`), then review and iterate similarly via `scripts/ai-implement.sh` until merged.
+  3. Stop. To run again, manually trigger the workflow.
 
 ## Setup
 1. Create a Cursor API key and add it as `CURSOR_API_KEY` repository secret.
-2. (Optional) Configure branch protection to require the `AI PR Review (Claude)` job.
-3. Adjust `.cursor/rules/000-goal.mdc` to set your real project goal.
-4. Commit and push.
+2. Adjust `.cursor/rules/000-goal.mdc` to set your real project goal.
+3. Commit and push.
 
 ## Usage
-- Manual trigger: Actions → `AI Loop (Plan ↔ Implement)` → Run workflow.
-- Scheduled: runs every 6 hours by default.
+- Manual trigger: Actions → `AI Run (Plan → Implement)` → Run workflow.
 
 ## Notes
 - The CLI is installed in CI from `https://cursor.com/install`.
-- You can adjust models in scripts: `gpt-5-high` for builder, `claude-4.5-sonnet` for Claude 4.5.
+- You can adjust models in scripts: `gpt-5` for builder, `sonnet-4.5-thinking` for reviews.
 - Scripts expect `gh` and `jq` in the runner environment (present on `ubuntu-latest`).
 
 ## Safety and guardrails
