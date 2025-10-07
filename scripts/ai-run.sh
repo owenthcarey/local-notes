@@ -8,15 +8,21 @@ ROOT_DIR=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 
 git_setup_identity() {
   # Ensure git identity for CI commits
-  git config user.name  "github-actions[bot]" || true
-  git config user.email "41898282+github-actions[bot]@users.noreply.github.com" || true
+  git config user.name  "github-actions[bot]" 1>/dev/null || true
+  git config user.email "41898282+github-actions[bot]@users.noreply.github.com" 1>/dev/null || true
+}
+
+ensure_label() {
+  local label_name="$1"
+  # Try to create; ignore error if exists
+  gh label create "$label_name" 1>/dev/null 2>/dev/null || true
 }
 
 create_planning_pr() {
   local branch="ai/planning-$(date +%s)"
   local plan_file="PLAN-0001.md"
 
-  echo "[AI RUN] Creating Planning PR via gh on branch $branch..."
+  echo "[AI RUN] Creating Planning PR via gh on branch $branch..." 1>&2
   git_setup_identity
   git switch -c "$branch"
 
@@ -38,6 +44,7 @@ EOF
   git commit -m "docs(plan): add PLAN-0001 bootstrap storage outline"
   git push -u origin "$branch"
 
+  ensure_label "ai:planning"
   gh pr create \
     --head "$branch" \
     --title "[PLAN] Bootstrap localStorage storage module + minimal app shell" \
@@ -53,7 +60,7 @@ create_implementation_pr() {
   local branch="ai/implementation-$(date +%s)"
   local stub_file=".ai/impl-stub.md"
 
-  echo "[AI RUN] Creating Implementation PR via gh on branch $branch..."
+  echo "[AI RUN] Creating Implementation PR via gh on branch $branch..." 1>&2
   git_setup_identity
   git switch -c "$branch"
 
@@ -68,6 +75,7 @@ EOF
   git commit -m "chore: open implementation PR stub for automation"
   git push -u origin "$branch"
 
+  ensure_label "ai:implementation"
   gh pr create \
     --head "$branch" \
     --title "[IMPL] Implementation PR (stub)" \
@@ -113,7 +121,7 @@ ensure_planning_pr() {
     return 0
   fi
 
-  echo "[AI RUN] No open Planning PR found. Creating one via fallback..."
+  echo "[AI RUN] No open Planning PR found. Creating one via fallback..." 1>&2
   url=$(create_planning_pr)
   if [ -n "$url" ]; then
     echo "$url"
@@ -131,7 +139,7 @@ ensure_implementation_pr() {
     return 0
   fi
 
-  echo "[AI RUN] No open Implementation PR found. Creating one via fallback..."
+  echo "[AI RUN] No open Implementation PR found. Creating one via fallback..." 1>&2
   url=$(create_implementation_pr)
   if [ -n "$url" ]; then
     echo "$url"
