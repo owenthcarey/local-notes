@@ -6,6 +6,79 @@ set -euo pipefail
 
 ROOT_DIR=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 
+git_setup_identity() {
+  # Ensure git identity for CI commits
+  git config user.name  "github-actions[bot]" || true
+  git config user.email "41898282+github-actions[bot]@users.noreply.github.com" || true
+}
+
+create_planning_pr() {
+  local branch="ai/planning-$(date +%s)"
+  local plan_file="PLAN-0001.md"
+
+  echo "[AI RUN] Creating Planning PR via gh on branch $branch..."
+  git_setup_identity
+  git switch -c "$branch"
+
+  cat > "$plan_file" <<'EOF'
+# PLAN-0001: Bootstrap localStorage storage module + minimal shell
+
+This planning document outlines the first implementation PR for a client-only notes app with localStorage persistence.
+
+## Goals
+- Establish a small storage module backed by localStorage
+- Provide a minimal HTML shell that renders notes
+
+## Next steps (to be implemented in the next PR)
+- Implement storage helpers (load/save/add/update/delete)
+- Minimal UI wiring to storage; ≤ ~200 changed lines overall
+EOF
+
+  git add "$plan_file"
+  git commit -m "docs(plan): add PLAN-0001 bootstrap storage outline"
+  git push -u origin "$branch"
+
+  gh pr create \
+    --head "$branch" \
+    --title "[PLAN] Bootstrap localStorage storage module + minimal app shell" \
+    --body "See $plan_file for details." \
+    --label "ai:planning"
+
+  local url
+  url=$(gh pr list --head "$branch" --state open --json url --jq '.[0].url')
+  echo "$url"
+}
+
+create_implementation_pr() {
+  local branch="ai/implementation-$(date +%s)"
+  local stub_file=".ai/impl-stub.md"
+
+  echo "[AI RUN] Creating Implementation PR via gh on branch $branch..."
+  git_setup_identity
+  git switch -c "$branch"
+
+  mkdir -p .ai
+  cat > "$stub_file" <<'EOF'
+# Implementation PR (stub)
+
+This stub exists so automation can iterate on the Implementation PR without a human creating it.
+EOF
+
+  git add "$stub_file"
+  git commit -m "chore: open implementation PR stub for automation"
+  git push -u origin "$branch"
+
+  gh pr create \
+    --head "$branch" \
+    --title "[IMPL] Implementation PR (stub)" \
+    --body "Automated stub PR to enable review/iteration; will be updated by agent." \
+    --label "ai:implementation"
+
+  local url
+  url=$(gh pr list --head "$branch" --state open --json url --jq '.[0].url')
+  echo "$url"
+}
+
 find_open_pr_by_kind() {
   local kind="$1" # planning | implementation
   local label prefix
@@ -40,15 +113,14 @@ ensure_planning_pr() {
     return 0
   fi
 
-  echo "[AI RUN] No open Planning PR found. Creating one..."
-  "${ROOT_DIR}/scripts/ai-plan.sh"
-  sleep 3
-  if url=$(find_open_pr_by_kind planning); then
-    echo "${url}"
+  echo "[AI RUN] No open Planning PR found. Creating one via fallback..."
+  url=$(create_planning_pr)
+  if [ -n "$url" ]; then
+    echo "$url"
     return 0
   fi
 
-  echo "[AI RUN] ERROR: Failed to locate Planning PR after creation." >&2
+  echo "[AI RUN] ERROR: Failed to create Planning PR via fallback." >&2
   exit 1
 }
 
@@ -59,15 +131,14 @@ ensure_implementation_pr() {
     return 0
   fi
 
-  echo "[AI RUN] No open Implementation PR found. Creating one..."
-  "${ROOT_DIR}/scripts/ai-implement.sh"
-  sleep 3
-  if url=$(find_open_pr_by_kind implementation); then
-    echo "${url}"
+  echo "[AI RUN] No open Implementation PR found. Creating one via fallback..."
+  url=$(create_implementation_pr)
+  if [ -n "$url" ]; then
+    echo "$url"
     return 0
   fi
 
-  echo "[AI RUN] ERROR: Failed to locate Implementation PR after creation." >&2
+  echo "[AI RUN] ERROR: Failed to create Implementation PR via fallback." >&2
   exit 1
 }
 

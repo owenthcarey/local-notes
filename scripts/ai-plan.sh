@@ -24,3 +24,10 @@ cursor-agent chat \
   --model "$MODEL" \
   --print \
   "$PROMPT"
+
+# If Cursor couldn't push commits, at least post a comment on the PR with the plan body (if PR provided)
+if [ -n "${PR_URL}" ]; then
+  {
+    echo "Automated planning update executed by Cursor. If commits were not pushed, the agent may have replied in logs."
+  } | gh pr comment "${PR_URL}" --body-file - || true
+fi

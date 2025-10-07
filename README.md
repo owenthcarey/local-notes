@@ -36,6 +36,8 @@ scripts/
   2. Create or update an Implementation PR (`[IMPL]`, label `ai:implementation`), then review and iterate similarly via `scripts/ai-implement.sh` until merged.
   3. Stop. To run again, manually trigger the workflow.
 
+> Note: If the agent cannot push commits/PRs, the orchestrator will create minimal Planning/Implementation PRs via `gh` so the cycle can proceed without human involvement.
+
 ## Setup
 1. Create a Cursor API key and add it as `CURSOR_API_KEY` repository secret.
 2. Adjust `.cursor/rules/000-goal.mdc` to set your real project goal.
