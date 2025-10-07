@@ -15,8 +15,6 @@ on:
         description: "Seconds to sleep between iterations (default 30)"
         required: false
         default: "30"
-  schedule:
-    - cron: "0 9 * * *"  # daily at 09:00 UTC
 
 permissions:
   contents: write
